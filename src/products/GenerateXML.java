@@ -82,7 +82,7 @@ public class GenerateXML {
             org.w3c.dom.Element mainRootElement = xmlDoc.createElementNS(link, "Products");
             xmlDoc.appendChild(mainRootElement);
 
-            String currentTitle;
+            String currentTitle = null;
             String prevTitle = null;
             String currentPrice = null;
             String currentImg = null;
@@ -90,7 +90,14 @@ public class GenerateXML {
                 Elements names = doc.getElementsByClass("go-to-product");
                 for (Element name : names) {
                     String title = name.attr("title");
-                    currentTitle = title;
+                    if (title.isEmpty()) {
+                        if (name.getElementsByAttribute("alt").first() != null) {
+                            title = name.getElementsByAttribute("alt").first().attr("alt");
+                        }
+                    }
+                    if (title != null && !title.isEmpty()) {
+                        currentTitle = title;
+                    }
 
                     if (!currentTitle.equals(prevTitle) && currentPrice != null) {
                         prevTitle = currentTitle;
