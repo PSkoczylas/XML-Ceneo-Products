@@ -18,6 +18,9 @@ import java.util.Base64;
 public class GenerateXML {
     private final String CENEO_BASE_LINK = "https://www.ceneo.pl/";
     private final int WRITE_OFF = 0;
+    private final String USER_AGENT = "Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6";
+    private final int TIMEOUT = 5000;
+    private final String GOOGLE_ADDR = "http://www.google.com";
 
     // utility method to create text node
     private Node getProductsElements(org.w3c.dom.Document doc, org.w3c.dom.Element element, String name, String value) {
@@ -73,8 +76,7 @@ public class GenerateXML {
 
     public GenerateXML(String link) {
         try {
-            final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.15 (KHTML, like Gecko) Chrome/24.0.1295.0 Safari/537.15";
-            Document doc = Jsoup.connect(link).userAgent(USER_AGENT).timeout(5000).get();
+            Document doc = Jsoup.connect(link).userAgent(USER_AGENT).timeout(TIMEOUT).referrer(GOOGLE_ADDR).get();
             DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder icBuilder;
             icBuilder = icFactory.newDocumentBuilder();
@@ -120,8 +122,8 @@ public class GenerateXML {
 
                 if (lin != null && !lin.isEmpty()) {
                     String link_addr = CENEO_BASE_LINK + lin.attr("href");
-                    doc = Jsoup.connect(link_addr).userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
-                            .referrer("http://www.google.com").timeout(5032).get();
+                    doc = Jsoup.connect(link_addr).userAgent(USER_AGENT)
+                            .referrer(GOOGLE_ADDR).timeout(TIMEOUT).get();
                 } else {
                     break;
                 }
